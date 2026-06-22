@@ -1,0 +1,1 @@
+import{j as e}from"./index-JDtAkJbd.js";const s="/__l5e/assets-v1/cdae62f9-f6c0-42a5-a33e-0dd340049b72/piplog-icon-master.png",a={url:s};function n({size:o=120,className:t=""}){return e.jsx("img",{src:a.url,alt:"PipLog Trading Journal",width:o,height:o,className:`inline-block select-none ${t}`,style:{width:o,height:o},draggable:!1})}export{n as P};

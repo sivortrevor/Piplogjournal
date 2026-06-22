@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+
+Sitemap: https://piplog-pro-journal.lovable.app/sitemap.xml

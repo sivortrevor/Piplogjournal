@@ -1,0 +1,12 @@
+# PipLog
+
+> PipLog is a premium forex trading journal that helps traders log every trade, analyze performance, master discipline, and grow consistently with data-driven insights.
+
+PipLog is a mobile-first web app for forex traders. It provides trade logging, performance analytics, a trading calendar, a journaling space for notes and emotions, and broker CSV imports (MT4, MT5, cTrader). The product is aimed at serious retail traders who want to review their edge and improve over time.
+
+## Pages
+
+- [Home](/): Splash and overview of PipLog, the premium forex trading journal.
+- [Onboarding](/onboarding): Quick tour of how PipLog helps you log trades, learn from data, and trade smarter.
+- [Sign in](/login): Sign in to your PipLog account.
+- [Create account](/register): Create a free PipLog account.
