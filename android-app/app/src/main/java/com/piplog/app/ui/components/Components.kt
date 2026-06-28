@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.piplog.app.ui.theme.*
 
 @Composable
@@ -79,8 +80,9 @@ fun PipLogLogo(
             .background(Primary),
         contentAlignment = Alignment.Center
     ) {
+        val fontSize = (size.value * 0.4f).sp
         val textStyle = MaterialTheme.typography.headlineLarge.copy(
-            fontSize = size * 0.4f,
+            fontSize = fontSize,
             fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold
         )
         Text(

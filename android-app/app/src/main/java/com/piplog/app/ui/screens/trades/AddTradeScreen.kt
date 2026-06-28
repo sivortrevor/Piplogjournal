@@ -6,7 +6,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.piplog.app.data.model.Constants
@@ -31,7 +45,7 @@ import com.piplog.app.ui.components.*
 import com.piplog.app.ui.theme.*
 import com.piplog.app.utils.TradeUtils
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AddTradeScreen(
     onNavigateBack: () -> Unit,
@@ -183,7 +197,7 @@ fun AddTradeScreen(
             Column(modifier = Modifier.padding(16.dp)) {
                 SectionHeader(
                     title = "Trade Details",
-                    icon = { Icon(Icons.Filled.Activity, contentDescription = null, tint = Primary) }
+                    icon = { Icon(Icons.Filled.Timeline, contentDescription = null, tint = Primary) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -587,6 +601,7 @@ fun AddTradeScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {

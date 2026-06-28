@@ -48,9 +48,10 @@ fun AnalyticsScreen(
     val avgWin = if (wins.isNotEmpty()) wins.map { it.pnl ?: 0.0 }.average() else 0.0
     val avgLoss = if (losses.isNotEmpty()) losses.map { it.pnl ?: 0.0 }.average() else 0.0
     val grossProfit = wins.sumOf { it.pnl ?: 0.0 }
-    val grossLoss = losses.sumOf { (it.pnl ?: 0.0).coerceAtMost(0) }
+    val grossLoss = losses.sumOf { (it.pnl ?: 0.0).coerceAtMost(0.0) }
 
-    val profitFactor = if (grossLoss != 0.0) grossProfit / grossLoss.let { kotlin.math.abs(it) } else if (grossProfit > 0) Double.POSITIVE_INFINITY else 0.0
+    val grossLossAbs = grossLoss.let { kotlin.math.abs(it) }
+    val profitFactor = if (grossLossAbs != 0.0) grossProfit / grossLossAbs else if (grossProfit > 0) Double.POSITIVE_INFINITY else 0.0
 
     Column(
         modifier = Modifier
@@ -122,12 +123,12 @@ fun AnalyticsScreen(
                     // Grid of metrics
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         MetricPill("Trades", "${uiState.trades.size}", Modifier.weight(1f))
-                        MetricPill("Win Rate", String.format("%.0f%%", winRate), Modifier.weight(1f))
+                        MetricPill("Win Rate", "${winRate.toInt()}%", Modifier.weight(1f))
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         MetricPill("Avg Win", TradeUtils.formatCurrency(avgWin), Modifier.weight(1f), StatTone.POSITIVE)
-                        MetricPill("Avg Loss", TradeUtils.formatCurrency(avLoss), Modifier.weight(1f), StatTone.NEGATIVE)
+                        MetricPill("Avg Loss", TradeUtils.formatCurrency(avgLoss), Modifier.weight(1f), StatTone.NEGATIVE)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

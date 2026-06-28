@@ -2,16 +2,16 @@ package com.piplog.app.data.repository
 
 import com.piplog.app.data.model.JournalEntry
 import com.piplog.app.data.supabase.SupabaseProvider
-import com.piplog.app.data.supabase.SupabaseProvider.Companion.JOURNAL_TABLE
+import io.github.jan.supabase.postgrest.query.Order
 
 class JournalRepository {
 
     suspend fun getAllEntries(userId: String): Result<List<JournalEntry>> {
         return try {
-            val entries = SupabaseProvider.postgrest[JOURNAL_TABLE]
+            val entries = SupabaseProvider.postgrest[SupabaseProvider.JOURNAL_TABLE]
                 .select {
                     filter { eq("user_id", userId) }
-                    order("entry_date", order = io.github.jan.supabase.postgrest.query.Order.DESCENDING)
+                    order("entry_date", order = Order.DESCENDING)
                 }
                 .decodeList<JournalEntry>()
             Result.success(entries)
@@ -22,7 +22,7 @@ class JournalRepository {
 
     suspend fun getEntryById(entryId: String): Result<JournalEntry?> {
         return try {
-            val entry = SupabaseProvider.postgrest[JOURNAL_TABLE]
+            val entry = SupabaseProvider.postgrest[SupabaseProvider.JOURNAL_TABLE]
                 .select {
                     filter { eq("id", entryId) }
                     limit(1)
@@ -36,13 +36,13 @@ class JournalRepository {
 
     suspend fun getEntriesByDate(userId: String, date: String): Result<List<JournalEntry>> {
         return try {
-            val entries = SupabaseProvider.postgrest[JOURNAL_TABLE]
+            val entries = SupabaseProvider.postgrest[SupabaseProvider.JOURNAL_TABLE]
                 .select {
                     filter {
                         eq("user_id", userId)
                         eq("entry_date", date)
                     }
-                    order("created_at", order = io.github.jan.supabase.postgrest.query.Order.DESCENDING)
+                    order("created_at", order = Order.DESCENDING)
                 }
                 .decodeList<JournalEntry>()
             Result.success(entries)
@@ -53,10 +53,10 @@ class JournalRepository {
 
     suspend fun getLatestEntry(userId: String): Result<JournalEntry?> {
         return try {
-            val entry = SupabaseProvider.postgrest[JOURNAL_TABLE]
+            val entry = SupabaseProvider.postgrest[SupabaseProvider.JOURNAL_TABLE]
                 .select {
                     filter { eq("user_id", userId) }
-                    order("entry_date", order = io.github.jan.supabase.postgrest.query.Order.DESCENDING)
+                    order("entry_date", order = Order.DESCENDING)
                     limit(1)
                 }
                 .decodeSingleOrNull<JournalEntry>()
@@ -68,7 +68,7 @@ class JournalRepository {
 
     suspend fun insertEntry(entry: JournalEntry): Result<JournalEntry> {
         return try {
-            val result = SupabaseProvider.postgrest[JOURNAL_TABLE]
+            val result = SupabaseProvider.postgrest[SupabaseProvider.JOURNAL_TABLE]
                 .insert(entry) {
                     select()
                 }
@@ -81,7 +81,7 @@ class JournalRepository {
 
     suspend fun updateEntry(entryId: String, title: String, content: String): Result<Unit> {
         return try {
-            SupabaseProvider.postgrest[JOURNAL_TABLE]
+            SupabaseProvider.postgrest[SupabaseProvider.JOURNAL_TABLE]
                 .update({
                     set("title", title)
                     set("content", content)
@@ -96,7 +96,7 @@ class JournalRepository {
 
     suspend fun deleteEntry(entryId: String): Result<Unit> {
         return try {
-            SupabaseProvider.postgrest[JOURNAL_TABLE]
+            SupabaseProvider.postgrest[SupabaseProvider.JOURNAL_TABLE]
                 .delete {
                     filter { eq("id", entryId) }
                 }

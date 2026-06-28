@@ -235,7 +235,6 @@ fun LoginScreen(
 
 @Composable
 private fun GoogleIcon() {
-    android.view.View
     androidx.compose.foundation.Canvas(modifier = Modifier.size(20.dp)) {
         // Simplified Google icon - you can replace with actual vector drawable
     }

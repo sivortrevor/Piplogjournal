@@ -18,9 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.piplog.app.ui.theme.*
 import com.piplog.app.utils.TradeUtils
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -87,7 +92,7 @@ fun CalendarScreen(
 
             val monthFormat = SimpleDateFormat("MMMM yyyy", Locale.US)
             Text(
-                text = monthFormat.value.format(currentMonth.value.time).uppercase(),
+                text = monthFormat.format(currentMonth.value.time).uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -302,7 +307,7 @@ fun CalendarDayCell(
     }
 }
 
-class CalendarViewModel : androidx.lifecycle.ViewModel() {
+class CalendarViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(CalendarUiState())
     val uiState: StateFlow<CalendarUiState> = _uiState.asStateFlow()
 

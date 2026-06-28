@@ -96,7 +96,7 @@ class AuthViewModel(
             val result = authRepository.resetPassword(email)
             result.fold(
                 onSuccess = {
-                    _uiState.update { it.copy(isLoading = false, error = "Password reset email sent!") })
+                    _uiState.update { it.copy(isLoading = false, error = "Password reset email sent!") }
                 },
                 onFailure = { error ->
                     _uiState.update { it.copy(isLoading = false, error = error.message ?: "Failed to send reset email") }

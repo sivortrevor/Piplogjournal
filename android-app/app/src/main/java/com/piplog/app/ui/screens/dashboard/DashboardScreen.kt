@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -28,6 +29,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.piplog.app.ui.components.*
 import com.piplog.app.ui.theme.*
 import com.piplog.app.utils.TradeUtils
+import co.yml.charts.common.model.Point
+import co.yml.charts.axis.AxisData
 import co.yml.charts.ui.linechart.LineChart
 import co.yml.charts.ui.linechart.model.*
 import java.text.SimpleDateFormat
@@ -372,43 +375,37 @@ fun EquityLineChart(
     val lineChartData = LineChartData(
         linePlotData = LinePlotData(
             lines = listOf(
-                Line(
-                    dataPoints = pointsData,
-                    lineStyle = LineStyle(
-                        color = Primary,
-                        lineType = LineType.SmoothCurve()
-                    ),
-                    shadowStyle = ShadowStyle(
-                        color = Primary.copy(alpha = 0.3f),
-                        isShadowUnderLine = true
+                    Line(
+                        dataPoints = pointsData,
+                        lineStyle = LineStyle(
+                            color = Primary,
+                            lineType = LineType.SmoothCurve()
+                        ),
+                        intersectionPoint = IntersectionPoint(
+                            color = Primary
+                        ),
+                        selectionHighlightPoint = SelectionHighlightPoint(
+                            color = Primary
+                        ),
+                        selectionHighlightPopUp = SelectionHighlightPopUp()
                     )
-                )
             )
         ),
-        xAxisData = AxisData(
-            axisLabelColor = MutedText,
-            axisLineColor = Color.Transparent,
-            axisStepSize = 0.dp,
-            axisOffset = 0.dp,
-            labelData = { index -> labels.getOrElse(index) { "" } },
-            axisLabelFontSize = 10.sp,
-            axisLabelRotation = 0,
-            axisStartPadding = 0.dp,
-            axisEndPadding = 0.dp
-        ),
-        yAxisData = AxisData(
-            axisLabelColor = MutedText,
-            axisLineColor = Color.Transparent,
-            axisStepSize = 0.dp,
-            axisOffset = 0.dp,
-            labelData = { index -> "" },
-            axisLabelFontSize = 10.sp,
-            axisStartPadding = 0.dp,
-            axisEndPadding = 0.dp
-        ),
-        backgroundColor = Color.Transparent,
-        containerPadding = PaddingValues(0.dp),
-        gridLines = GridLines()
+        xAxisData = AxisData.Builder()
+            .axisLabelColor(MutedText)
+            .axisLineColor(Color.Transparent)
+            .steps(pointsData.size - 1)
+            .labelData { index -> labels.getOrElse(index) { "" } }
+            .labelAndAxisLinePadding(10.dp)
+            .build(),
+        yAxisData = AxisData.Builder()
+            .axisLabelColor(MutedText)
+            .axisLineColor(Color.Transparent)
+            .steps(5)
+            .labelData { index -> "" }
+            .labelAndAxisLinePadding(10.dp)
+            .build(),
+        backgroundColor = Color.Transparent
     )
 
     LineChart(

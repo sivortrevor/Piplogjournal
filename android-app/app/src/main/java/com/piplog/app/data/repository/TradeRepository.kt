@@ -1,22 +1,17 @@
 package com.piplog.app.data.repository
 
-import android.net.Uri
 import com.piplog.app.data.model.Trade
 import com.piplog.app.data.supabase.SupabaseProvider
-import com.piplog.app.data.supabase.SupabaseProvider.Companion.SCREENSHOTS_BUCKET
-import com.piplog.app.data.supabase.SupabaseProvider.Companion.TRADES_TABLE
-import io.github.jan.supabase.storage.resumable.uploadResumable
-import kotlinx.serialization.json.Json
-import java.io.File
+import io.github.jan.supabase.postgrest.query.Order
 
 class TradeRepository {
 
     suspend fun getAllTrades(userId: String): Result<List<Trade>> {
         return try {
-            val trades = SupabaseProvider.postgrest[TRADES_TABLE]
+            val trades = SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .select {
                     filter { eq("user_id", userId) }
-                    order("opened_at", order = io.github.jan.supabase.postgrest.query.Order.DESCENDING)
+                    order("opened_at", order = Order.DESCENDING)
                 }
                 .decodeList<Trade>()
             Result.success(trades)
@@ -27,7 +22,7 @@ class TradeRepository {
 
     suspend fun getTradeById(tradeId: String): Result<Trade?> {
         return try {
-            val trade = SupabaseProvider.postgrest[TRADES_TABLE]
+            val trade = SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .select {
                     filter { eq("id", tradeId) }
                     limit(1)
@@ -45,14 +40,14 @@ class TradeRepository {
         endDate: String
     ): Result<List<Trade>> {
         return try {
-            val trades = SupabaseProvider.postgrest[TRADES_TABLE]
+            val trades = SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .select {
                     filter {
                         eq("user_id", userId)
                         gte("opened_at", startDate)
                         lte("opened_at", endDate)
                     }
-                    order("opened_at", order = io.github.jan.supabase.postgrest.query.Order.DESCENDING)
+                    order("opened_at", order = Order.DESCENDING)
                 }
                 .decodeList<Trade>()
             Result.success(trades)
@@ -63,7 +58,7 @@ class TradeRepository {
 
     suspend fun insertTrade(trade: Trade): Result<Trade> {
         return try {
-            val result = SupabaseProvider.postgrest[TRADES_TABLE]
+            val result = SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .insert(trade) {
                     select()
                 }
@@ -76,7 +71,7 @@ class TradeRepository {
 
     suspend fun updateTrade(tradeId: String, updates: Map<String, Any?>): Result<Unit> {
         return try {
-            SupabaseProvider.postgrest[TRADES_TABLE]
+            SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .update({
                     updates.forEach { (key, value) ->
                         when (value) {
@@ -99,7 +94,7 @@ class TradeRepository {
 
     suspend fun deleteTrade(tradeId: String): Result<Unit> {
         return try {
-            SupabaseProvider.postgrest[TRADES_TABLE]
+            SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .delete {
                     filter { eq("id", tradeId) }
                 }
@@ -112,10 +107,8 @@ class TradeRepository {
     suspend fun uploadScreenshot(userId: String, fileName: String, bytes: ByteArray): Result<String> {
         return try {
             val path = "$userId/${System.currentTimeMillis()}_$fileName"
-            SupabaseProvider.storage[SCREENSHOTS_BUCKET]
-                .uploadResumable(path, bytes) {
-                    upsert = false
-                }
+            SupabaseProvider.storage[SupabaseProvider.SCREENSHOTS_BUCKET]
+                .upload(path, bytes)
             Result.success(path)
         } catch (e: Exception) {
             Result.failure(e)
@@ -123,18 +116,18 @@ class TradeRepository {
     }
 
     fun getScreenshotUrl(path: String): String {
-        return SupabaseProvider.storage[SCREENSHOTS_BUCKET].publicUrl(path)
+        return SupabaseProvider.storage[SupabaseProvider.SCREENSHOTS_BUCKET].publicUrl(path)
     }
 
     suspend fun searchTrades(userId: String, query: String): Result<List<Trade>> {
         return try {
-            val trades = SupabaseProvider.postgrest[TRADES_TABLE]
+            val trades = SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .select {
                     filter {
                         eq("user_id", userId)
                         ilike("pair", "%$query%")
                     }
-                    order("opened_at", order = io.github.jan.supabase.postgrest.query.Order.DESCENDING)
+                    order("opened_at", order = Order.DESCENDING)
                 }
                 .decodeList<Trade>()
             Result.success(trades)
@@ -145,13 +138,13 @@ class TradeRepository {
 
     suspend fun getTradesByResult(userId: String, result: String): Result<List<Trade>> {
         return try {
-            val trades = SupabaseProvider.postgrest[TRADES_TABLE]
+            val trades = SupabaseProvider.postgrest[SupabaseProvider.TRADES_TABLE]
                 .select {
                     filter {
                         eq("user_id", userId)
                         eq("result", result)
                     }
-                    order("opened_at", order = io.github.jan.supabase.postgrest.query.Order.DESCENDING)
+                    order("opened_at", order = Order.DESCENDING)
                 }
                 .decodeList<Trade>()
             Result.success(trades)
